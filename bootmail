@@ -3,7 +3,7 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: bootmail
-# Description:       bootmail, Send email for alert system maintenance informations.
+# Description:       bootmail, Email alert of system boot, reboot, and halt.
 ### END INIT INFO
 export PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin"
 export option="${1}"
