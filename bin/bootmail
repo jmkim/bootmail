@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # /usr/xbin/bootmail: Email alert of system boot, reboot, and halt.
 ### BEGIN INIT INFO
 # Provides:          bootmail
