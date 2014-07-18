@@ -15,9 +15,10 @@ PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 MAILTO="root"
 SENDER="$(id -n -u)@$(hostname -f)"
 
-LOGDIR="/var/log/bootmail"
+LOGDIR="/var/log"
 LOGFILE="$LOGDIR/bootmail.log"
 
+BOOTLOGD="no"
 BOOTLOGFILE="/var/log/boot"
 
 if test -f "/etc/default/bootmail"; then
@@ -147,8 +148,9 @@ case "$1" in
         	;;
 	start)
 		OPTYPE="boot"
-		if test -f "/var/log/boot"; then
+		if [ "$BOOTLOGD" == "yes" ] && test -f "/var/log/boot"; then
 			body_boot_a
+			
 		else
 			body_boot
 		fi
