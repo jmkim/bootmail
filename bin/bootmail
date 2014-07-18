@@ -33,30 +33,30 @@ RUNLEVEL="$(runlevel)"
 RUNLEVEL="${RUNLEVEL:1}"
 
 do_mailx(){
-	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
 	sudo mailx -s "$SUBJECT" "$MAILTO"
 	return
 }
 
 do_mutt(){
-	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
 	sudo mutt -s "$SUBJECT" -- "$MAILTO"
 	return
 }
 
 do_mutt_a(){
-	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
 	sudo mutt -s "$SUBJECT" -a "$BOOTLOGFILE" -- "$MAILTO"
 	return
 }
 
 do_log(){
 	if [ $1 -eq 0 ]; then
-		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	to $MAILTO\n" >> $LOGFILE
 		echo "OK"
 		return 0
 	else
-		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE	to $MAILTO\n" >> $LOGFILE
 		echo "FAIL"
 		return 1
 	fi
