@@ -32,29 +32,6 @@ TIME="$(date +'%F %T')"
 RUNLEVEL="$(runlevel)"
 RUNLEVEL="${RUNLEVEL:1}"
 
-func_help(){
-	echo "bootmail, Send email for alert system maintenance informations."
-	echo "Usage: $0 {start|stop} [email address]"
-	echo ""
-	echo "Arguments:"
-	echo "        start          - system boot up alert."
-	echo "        stop           - system halt alert."
-	echo "        restart        - system reboot alert."
-	echo ""
-	echo "Options:"
-	echo "   -h,  --help         - print this help."
-	echo ""
-	echo "Example:"
-	echo "   $0 start    - Boot up alert."
-	echo "   $0 stop     - Halt alert."
-	echo "   $0 start admin@example.com"
-	echo "                       - Boot up alert to admin@example.com."
-	echo ""
-	echo "Current receive email address is: $MAILTO"
-	echo "You can add or edit to '/etc/default/bootmail'."
-	return 0
-}
-
 do_log(){
 	if [ $1 -eq 0 ]; then
 		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
@@ -131,6 +108,29 @@ body_reboot(){
 	do_log $?
 }
 
+func_help(){
+	echo "bootmail, Send email for alert system maintenance informations."
+	echo "Usage: $0 {start|stop} [email address]"
+	echo ""
+	echo "Arguments:"
+	echo "        start          - system boot up alert."
+	echo "        stop           - system halt alert."
+	echo "        restart        - system reboot alert."
+	echo ""
+	echo "Options:"
+	echo "   -h,  --help         - print this help."
+	echo ""
+	echo "Example:"
+	echo "   $0 start    - Boot up alert."
+	echo "   $0 stop     - Halt alert."
+	echo "   $0 start admin@example.com"
+	echo "                       - Boot up alert to admin@example.com."
+	echo ""
+	echo "Current receive email address is: $MAILTO"
+	echo "You can add or edit to '/etc/default/bootmail'."
+	return 0
+}
+
 case "$1" in
 	-h|-\?|--help)
 		do_help
@@ -169,5 +169,5 @@ case "$1" in
 		exit 3
 	;;
 esac
-export ERRORLEVEL="$?"
-exit $ERRORLEVEL
+
+exit
