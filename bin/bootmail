@@ -1,5 +1,5 @@
 #!/bin/bash
-# /usr/xbin/bootmail: Email alert of system boot, reboot, and halt.
+# /usr/xbin/bootmail: Email alert when system boot, reboot, and halt.
 ### BEGIN INIT INFO
 # Provides:          bootmail
 # Required-Start:    $all
@@ -9,36 +9,40 @@
 ### END INIT INFO
 PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin"
 
-BOOTMAIL="root"
+MAILTO="root"
+SENDER="$(id -n -u)@$(hostname -f)"
+
+LOGDIR="/var/log/bootmail"
+LOGFILE="$LOGDIR/bootmail.log"
 
 OPTYPE="$1"
 
 if [ ! -z "$2" ]; then
-	MAILTO="${2}"
-elif [ -z "${BOOTMAIL}" ]; then
-	MAILTO="webmaster"
+	MAILTO="$2"
+elif [ -z "$MAILTO" ]; then
+	MAILTO="root"
 else
-	MAILTO="${BOOTMAIL}"
+	MAILTO="$MAILTO"
 fi
-export time="$(date +'%F %T')"
+TIME="$(date +'%F %T')"
 if [ ! -z "$(id -n -u)" ]; then
-	export from="$(id -n -u)@$(hostname -f)"
+	SENDER="$(id -n -u)@$(hostname -f)"
 else
-	export from="root@$(hostname -f)"
+	SENDER="root@$(hostname -f)"
 fi
-export runlevel="$(runlevel)"
-export runlevel="${runlevel:1}"
-export logfile="/var/log/bootmail.log"
+RUNLEVEL="$(runlevel)"
+RUNLEVEL="${RUNLEVEL:1}"
+
 func_log(){
 	if [ ${1} = 0 ]; then
-		printf "[ OK ] ${time} ${runlevel} ${OPTYPE} to ${MAILTO}\n" >> ${logfile}
+		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE to $MAILTO\n" >> $LOGFILE
 	else
-		printf "[FAIL] ${time} ${runlevel} ${OPTYPE} to ${MAILTO}\n" >> ${logfile}
+		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE to $MAILTO\n" >> $LOGFILE
 	fi
 }
 func_help(){
 	echo "bootmail, Send email for alert system maintenance informations."
-	echo "Usage: $0 {start|stop|!restart} [email address]"
+	echo "Usage: $0 {start|stop|restart} [email address]"
 	echo ""
 	echo "Arguments:"
 	echo "        start          - system boot up alert."
@@ -49,79 +53,79 @@ func_help(){
 	echo "   -h,  --help         - print this help."
 	echo ""
 	echo "Example:"
-	echo "   bootmail start    - Boot up alert."
-	echo "   bootmail stop     - Halt alert."
-	echo "   bootmail start admin@example.com"
+	echo "   $0 start    - Boot up alert."
+	echo "   $0 stop     - Halt alert."
+	echo "   $0 start admin@example.com"
 	echo "                       - Boot up alert to admin@example.com."
 	echo ""
-	echo "Current default email address is: ${BOOTMAIL}"
-	echo "You must set 'BOOTMAIL' to change default email address."
+	echo "Current receive email address is: $MAILTO"
+	echo "You can add or edit to '/etc/default/bootmail'."
 	return 0
 }
-func_start(){
-	local subject="Broadcast message from ${from}"
-	local attachment="sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' /var/log/boot"
+body_boot(){
+	local SUBJECT="Broadcast message from $SENDER"
+	#local SED="sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' /var/log/boot"
 	{	
-		printf "Issued Date: ${time}\n"
+		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system has been completely booted up.\n\n"
 		printf "Attachment: /var/log/boot (bootlogd)\n"
-	} | sudo mutt -s "${subject}" -a "/var/log/boot" -- "${MAILTO}"
-	if [ ${?} -eq 0 ]; then
+	} | sudo mutt -s "$SUBJECT" -a "/var/log/boot" -- "$MAILTO"
+	if [ $? -eq 0 ]; then
 		func_log 0
 		return 0
 	else
-		echo "bootmail: An error occurred whule sending email to ${MAILTO}."
+		echo "bootmail: An error occurred whule sending email to $MAILTO."
 		func_log 1
 		return 1
 	fi
 }
-func_stop(){
-	local subject="Broadcast message from ${from}"
+body_halt(){
+	local SUBJECT="Broadcast message from $SENDER"
 	{
-		printf "Issued Date: ${time}\n"
+		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system halt NOW!\n\n"
-	} | sudo mutt -s "${subject}" "${MAILTO}"
-	if [ ${?} -eq 0 ]; then
+	} | sudo mutt -s "$SUBJECT" "$MAILTO"
+	if [ $? -eq 0 ]; then
 		func_log 0
 		return 0
 	else
-		echo "bootmail: An error occurred while sending email to ${MAILTO}."
+		echo "bootmail: An error occurred while sending email to $MAILTO."
 		func_log 1
 		return 1
 	fi
 }
-func_restart(){
-	local subject="Broadcast message from ${from}"
+body_reboot(){
+	local SUBJECT="Broadcast message from $SENDER"
 	{
-		printf "Issued Date: ${time}\n"
+		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system reboot NOW!\n\n"
-	} | sudo mutt -s "${subject}" "${MAILTO}"
-	if [ ${?} -eq 0 ]; then
+	} | sudo mutt -s "$SUBJECT" "$MAILTO"
+	if [ $? -eq 0 ]; then
 		func_log 0
 		return 0
 	else
-		echo "bootmail: An error occurred whule sending email to ${MAILTO}."
+		echo "bootmail: An error occurred whule sending email to $MAILTO."
 		func_log 1
 		return 1
 	fi
 }
 case "$1" in
 	start)
-		func_start
+		body_boot
 	;;
 	stop)
-		if [ ${runlevel} -eq 6 ]; then
+		if [ $RUNLEVEL -eq 6 ]; then
 			OPTYPE="restart"
-			func_restart
+			body_reboot
 		else
-			func_stop
+			body_halt
 		fi
 	;;
 	restart)
-		func_restart
+		body_reboot
 	;;
 	-h|-\?|--help)
 		func_help
@@ -130,11 +134,11 @@ case "$1" in
 		if [ ! -z "$1" ]; then
 			echo "Invalid option: $1"
 		fi
-		echo "Usage: bootmail {start|stop|restart} [email address]" >&2
+		echo "Usage: $0 {start|stop|restart} [email address]" >&2
 		echo "" >&2
-		echo "Try 'bootmail --help' for more options." >&2
+		echo "Try '$0 --help' for more options." >&2
 		exit 2
 	;;
 esac
-export errorlevel="${?}"
-exit ${errorlevel}
+export ERRORLEVEL="$?"
+exit $ERRORLEVEL
