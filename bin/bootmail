@@ -15,35 +15,26 @@ SENDER="$(id -n -u)@$(hostname -f)"
 LOGDIR="/var/log/bootmail"
 LOGFILE="$LOGDIR/bootmail.log"
 
-if test -f /etc/default/ssh; then
-    . /etc/default/ssh
+BOOTLOGFILE="/var/log/boot"
+
+if test -f "/etc/default/bootmail"; then
+    . "/etc/default/bootmail"
 fi
+
 if [ ! -z "$2" ]; then
 	MAILTO="$2"
 elif [ -z "$MAILTO" ]; then
 	MAILTO="root"
-else
-	MAILTO="$MAILTO"
 fi
+
 TIME="$(date +'%F %T')"
-if [ ! -z "$(id -n -u)" ]; then
-	SENDER="$(id -n -u)@$(hostname -f)"
-else
-	SENDER="root@$(hostname -f)"
-fi
+
 RUNLEVEL="$(runlevel)"
 RUNLEVEL="${RUNLEVEL:1}"
 
-func_log(){
-	if [ ${1} = 0 ]; then
-		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE to $MAILTO\n" >> $LOGFILE
-	else
-		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE to $MAILTO\n" >> $LOGFILE
-	fi
-}
 func_help(){
 	echo "bootmail, Send email for alert system maintenance informations."
-	echo "Usage: $0 {start|stop|restart} [email address]"
+	echo "Usage: $0 {start|stop} [email address]"
 	echo ""
 	echo "Arguments:"
 	echo "        start          - system boot up alert."
@@ -63,56 +54,83 @@ func_help(){
 	echo "You can add or edit to '/etc/default/bootmail'."
 	return 0
 }
+
+do_log(){
+	if [ $1 -eq 0 ]; then
+		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		echo "OK"
+		return 0
+	else
+		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		echo "FAIL"
+		return 1
+	fi
+}
+
+do_bootlogd(){
+	sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' "$BOOTLOGFILE"
+	return
+}
+
+do_mailx(){
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	sudo mailx -s "$SUBJECT" "$MAILTO"
+	return
+}
+
+do_mutt(){
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	sudo mutt -s "$SUBJECT" -- "$MAILTO"
+	return
+}
+
+do_mutt_a(){
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
+	sudo mutt -s "$SUBJECT" -a "$BOOTLOGFILE" -- "$MAILTO"
+	return
+}
+
 body_boot(){
 	local SUBJECT="Broadcast message from $SENDER"
-	#local SED="sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' /var/log/boot"
 	{	
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system has been completely booted up.\n\n"
-		printf "Attachment: /var/log/boot (bootlogd)\n"
-	} | sudo mutt -s "$SUBJECT" -a "/var/log/boot" -- "$MAILTO"
-	if [ $? -eq 0 ]; then
-		func_log 0
-		return 0
-	else
-		echo "bootmail: An error occurred whule sending email to $MAILTO."
-		func_log 1
-		return 1
-	fi
+	} | do_mutt
+	do_log $?
 }
+
+body_boot_a(){
+	local SUBJECT="Broadcast message from $SENDER"
+	{	
+		printf "Issued Date: $TIME\n"
+		printf "bootmail:\n\n"
+		printf "The system has been completely booted up.\n\n"
+		printf "Attachment: $BOOTLOGFILE (bootlogd)\n"
+	} | do_mutt_a
+	do_log $?
+}
+
 body_halt(){
 	local SUBJECT="Broadcast message from $SENDER"
 	{
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system halt NOW!\n\n"
-	} | sudo mutt -s "$SUBJECT" "$MAILTO"
-	if [ $? -eq 0 ]; then
-		func_log 0
-		return 0
-	else
-		echo "bootmail: An error occurred while sending email to $MAILTO."
-		func_log 1
-		return 1
-	fi
+	} | do_mutt
+	do_log $?
 }
+
 body_reboot(){
 	local SUBJECT="Broadcast message from $SENDER"
 	{
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system reboot NOW!\n\n"
-	} | sudo mutt -s "$SUBJECT" "$MAILTO"
-	if [ $? -eq 0 ]; then
-		func_log 0
-		return 0
-	else
-		echo "bootmail: An error occurred whule sending email to $MAILTO."
-		func_log 1
-		return 1
-	fi
+	} | do_mutt
+	do_log $?
 }
+
 case "$1" in
 	-h|-\?|--help)
 		do_help
@@ -126,7 +144,11 @@ case "$1" in
         	;;
 	start)
 		OPTYPE="boot"
-		body_boot
+		if test -f "/var/log/boot"; then
+			body_boot_a
+		else
+			body_boot
+		fi
 	;;
 	stop)
 		if [ $RUNLEVEL -eq 6 ]; then
