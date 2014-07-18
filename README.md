@@ -1,5 +1,6 @@
 bootmail
 ========
+NOT WORKS YET.
 
 How to enable bootmail on system boot, halt, and reboot?
 
