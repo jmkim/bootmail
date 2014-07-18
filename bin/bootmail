@@ -1,5 +1,5 @@
 #!/bin/bash
-# /usr/xbin/bootmail: Email alert when system boot, reboot, and halt.
+# /usr/bin/bootmail: Email alert when system boot, reboot, and halt.
 ### BEGIN INIT INFO
 # Provides:          bootmail
 # Required-Start:    $all
@@ -7,7 +7,7 @@
 # Default-Start:     2
 # Default-Stop:      0 1 6
 ### END INIT INFO
-PATH="$PATH:/bin:/sbin:/usr/bin:/usr/sbin"
+PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 
 MAILTO="root"
 SENDER="$(id -n -u)@$(hostname -f)"
@@ -15,8 +15,9 @@ SENDER="$(id -n -u)@$(hostname -f)"
 LOGDIR="/var/log/bootmail"
 LOGFILE="$LOGDIR/bootmail.log"
 
-OPTYPE="$1"
-
+if test -f /etc/default/ssh; then
+    . /etc/default/ssh
+fi
 if [ ! -z "$2" ]; then
 	MAILTO="$2"
 elif [ -z "$MAILTO" ]; then
@@ -113,31 +114,37 @@ body_reboot(){
 	fi
 }
 case "$1" in
+	-h|-\?|--help)
+		do_help
+	;;
+	-n|--dry-run)
+		do_dryrun
+	;;
+	restart|reload|force-reload)
+        	echo "Error: argument '$1' not supported" >&2
+        	exit 3
+        	;;
 	start)
+		OPTYPE="boot"
 		body_boot
 	;;
 	stop)
 		if [ $RUNLEVEL -eq 6 ]; then
-			OPTYPE="restart"
+			OPTYPE="reboot"
 			body_reboot
 		else
+			OPTYPE="halt"
 			body_halt
 		fi
-	;;
-	restart)
-		body_reboot
-	;;
-	-h|-\?|--help)
-		func_help
 	;;
 	*)
 		if [ ! -z "$1" ]; then
 			echo "Invalid option: $1"
 		fi
-		echo "Usage: $0 {start|stop|restart} [email address]" >&2
+		echo "Usage: $0 {start|stop} [email address]" >&2
 		echo "" >&2
 		echo "Try '$0 --help' for more options." >&2
-		exit 2
+		exit 3
 	;;
 esac
 export ERRORLEVEL="$?"
