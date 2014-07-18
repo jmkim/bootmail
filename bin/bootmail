@@ -32,23 +32,6 @@ TIME="$(date +'%F %T')"
 RUNLEVEL="$(runlevel)"
 RUNLEVEL="${RUNLEVEL:1}"
 
-do_log(){
-	if [ $1 -eq 0 ]; then
-		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
-		echo "OK"
-		return 0
-	else
-		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
-		echo "FAIL"
-		return 1
-	fi
-}
-
-do_bootlogd(){
-	sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' "$BOOTLOGFILE"
-	return
-}
-
 do_mailx(){
 	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
 	sudo mailx -s "$SUBJECT" "$MAILTO"
@@ -65,6 +48,18 @@ do_mutt_a(){
 	echo -n "bootmail: $OPTYPE mail sending to $MAILTO... "
 	sudo mutt -s "$SUBJECT" -a "$BOOTLOGFILE" -- "$MAILTO"
 	return
+}
+
+do_log(){
+	if [ $1 -eq 0 ]; then
+		printf "[ OK ] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		echo "OK"
+		return 0
+	else
+		printf "[FAIL] $TIME $RUNLEVEL $OPTYPE	mailto:$MAILTO\n" >> $LOGFILE
+		echo "FAIL"
+		return 1
+	fi
 }
 
 body_boot(){
@@ -108,17 +103,26 @@ body_reboot(){
 	do_log $?
 }
 
+do_dryrun(){
+	echo "Not yet."
+}
+
+do_bootlogd(){
+	sed 's/\^\[/\o33/g;s/\[1G\[/\[27G\[/' "$BOOTLOGFILE"
+	return
+}
+
 do_help(){
 	echo "bootmail, Send email for alert system maintenance."
 	echo "Usage: $0 {start|stop} [email address]"
 	echo ""
 	echo "Arguments:"
-	echo "        start          - system boot up alert."
-	echo "        stop           - system halt/reboot alert."
+	echo "     start     system boot up alert."
+	echo "     stop      system halt/reboot alert."
 	echo ""
 	echo "Options:"
-	echo "   -h,  --help         - print this help."
-	echo "   -n,  --dry-run      - perform a trial run with no changes made."
+	echo " -h, --help    print this help."
+	echo " -n, --dry-run perform a trial run with no changes made."
 	echo ""
 	echo "This script is InitScript. Run directly is not recommended."
 	echo ""
