@@ -1,5 +1,7 @@
 #!/bin/bash
-# /usr/bin/bootmail: Email alert when system boot, reboot, and halt.
+
+# bootmail: Email alert when system boot, reboot, and halt for Debian GNU/Linux.
+
 ### BEGIN INIT INFO
 # Provides:          bootmail
 # Required-Start:    $all
@@ -7,6 +9,7 @@
 # Default-Start:     2
 # Default-Stop:      0 1 6
 ### END INIT INFO
+
 PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 
 MAILTO="root"
@@ -68,7 +71,7 @@ body_boot(){
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system has been completely booted up.\n\n"
-	} | do_mutt
+	} | do_mailx
 	do_log $?
 }
 
@@ -89,7 +92,7 @@ body_halt(){
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system halt NOW!\n\n"
-	} | do_mutt
+	} | do_mailx
 	do_log $?
 }
 
@@ -99,7 +102,7 @@ body_reboot(){
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system reboot NOW!\n\n"
-	} | do_mutt
+	} | do_mailx
 	do_log $?
 }
 
