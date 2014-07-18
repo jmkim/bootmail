@@ -108,7 +108,7 @@ body_reboot(){
 	do_log $?
 }
 
-func_help(){
+do_help(){
 	echo "bootmail, Send email for alert system maintenance."
 	echo "Usage: $0 {start|stop} [email address]"
 	echo ""
