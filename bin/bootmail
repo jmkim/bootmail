@@ -148,7 +148,7 @@ case "$1" in
         	;;
 	start)
 		OPTYPE="boot"
-		if [ "$BOOTLOGD" == "yes" ] && test -f "/var/log/boot"; then
+		if [ "$BOOTLOGD" == "yes" ] && test -f "$BOOTLOGFILE"; then
 			body_boot_a
 			
 		else
