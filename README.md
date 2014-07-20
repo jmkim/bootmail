@@ -26,7 +26,7 @@ Two download options are available:
  - `sudo update-rc.d bootmail defaults` - *Install script to InitScript daemon.*
 
 3. *(Optional)* Make `/etc/default/bootmail`.
- - See **[Example: /etc/default/bootmail](#-etc-default-bootmail)**.
+ - See **[Example: /etc/default/bootmail](#etcdefaultbootmail)**.
  - You can customize these defined values for yourself.
 
 4. *(Optional)* Install `bootlogd` and `mutt`.
