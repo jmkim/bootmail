@@ -1,6 +1,7 @@
 # [bootmail](https://github.com/kdzlvaids/bootmail)
 
 ## Table of contents
+
  - [Requirements](#requirements)
  - [Installation](#installation)
  - [Usage](#usage)
@@ -8,6 +9,7 @@
  - [License](#license)
 
 ## Requirements
+
  - **mailx**
  - **mutt** *(optional)*  - Nice text-based email client. [Learn more](https://wiki.debian.org/Mutt)
  - **bootlogd** *(optional)*  - Record boot messages. [Learn more](https://wiki.debian.org/bootlogd)
