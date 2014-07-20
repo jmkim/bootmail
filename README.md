@@ -1,4 +1,4 @@
-# [bootmail](https://github.com/kdzlvaids/bootmail)
+# bootmail
 
 This Linux shell script will send you an email alert when system goes boot, reboot, and halt.
 
