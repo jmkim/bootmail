@@ -33,12 +33,13 @@ Two download options are available:
  - `sudo echo "USEBOOTLOGD=yes" >>/etc/default/bootmail`
 
 ## Usage
-Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.
 ### Run as InitScript
+*Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.*
 ```bash
 service bootmail {start|stop}
 ```
 ### Execute directly
+*Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.*
 ```bash
 bootmail {start|stop} [email address]
 
