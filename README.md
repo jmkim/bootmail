@@ -1,6 +1,6 @@
 # [bootmail](https://github.com/kdzlvaids/bootmail)
 
-This Linux shell script will send you an email alert when system goes boot up, halt, and reboot.
+This Linux shell script will send you an email alert when system goes boot, reboot, and halt.
 
 ## Table of contents
 
@@ -42,13 +42,13 @@ Two download options are available:
 
 ### Run as InitScript
 
-*Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.*
+*Do not run manually. bootmail will send an email automatically when system boot, reboot, and halt.*
 ```bash
 service bootmail {start|stop}
 ```
 ### Execute directly
 
-*Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.*
+*Do not run manually. bootmail will send an email automatically when system boot, reboot, and halt.*
 ```bash
 bootmail {start|stop} [email address]
 
@@ -70,7 +70,7 @@ MAILTO="root"                       # Receive mail address. Default is: 'root' i
 SENDER="$(id -n -u)@$(hostname -f)" # Sender mail address.
 LOGDIR="/var/log"                   # Log directory.
 LOGFILE="$LOGDIR/bootmail.log"      # Log file location.
-USEBOOTLOG="no"                     # Bootlogd attachment in Bootup mail. You must install bootlogd using 'apt-get install bootlogd'.
+USEBOOTLOG="no"                     # Attach a boot record into the boot up mail.
 BOOTLOGFILE="/var/log/boot"         # Bootlog attachment location.
 ```
 
