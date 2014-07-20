@@ -15,7 +15,7 @@
 ## Installation
 1. Download the script.
 Two download options are available:
- - [Download the script](https://github.com/kdzlvaids/bootmail/archive/master.zip).
+ - [Download the script as zipped archive](https://github.com/kdzlvaids/bootmail/archive/master.zip).
  - Clone the repo: `git clone https://github.com/kdzlvaids/bootmail.git`.
 2. Install the script.
  - `chmod 755 bin/bootmail` - Script as executable.
