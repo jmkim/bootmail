@@ -1,5 +1,8 @@
 # [bootmail](https://github.com/kdzlvaids/bootmail)
 
+This Linux shell script will send you an email alert when system goes boot up, halt, and reboot.
+To receive outside of localhost, mail server or SMTP account setup is needed.
+
 ## Table of contents
 
  - [Requirements](#requirements)
