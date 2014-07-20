@@ -17,13 +17,16 @@
 Two download options are available:
  - [Download the script as zipped archive](https://github.com/kdzlvaids/bootmail/archive/master.zip).
  - Clone the repo: `git clone https://github.com/kdzlvaids/bootmail.git`.
+
 2. Install the script.
  - `chmod 755 bin/bootmail` - *Script as executable.*
  - `sudo mv bin/bootmail /etc/init.d/`
  - `sudo update-rc.d bootmail defaults` - *Install script to InitScript daemon.*
+
 3. *(Optional)* Make `/etc/default/bootmail`.
  - See **[Example: /etc/default/bootmail](#/etc/default/bootmail)**.
  - You can customize these defined values for yourself.
+
 4. *(Optional)* Install `bootlogd` and `mutt`.
  - `sudo apt-get install bootlogd mutt`
  - `sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd`
