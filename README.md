@@ -10,7 +10,7 @@
 ## Requirements
  - **mailx**
  - **mutt** *(optional)*  - Nice text-based email client. [Learn more](en.wikipedia.org/wiki/Mutt_(email_client))
- - **bootlogd** *(optional)*
+ - **bootlogd** *(optional)*  - Record Bootlog of Debian GNU/Linux.
 
 ## Installation
 1. Download the script.
