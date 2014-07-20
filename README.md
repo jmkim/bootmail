@@ -9,8 +9,8 @@
 
 ## Requirements
  - **mailx**
- - **mutt** *(optional)*  - Nice text-based email client. [Learn more](en.wikipedia.org/wiki/Mutt_(email_client))
- - **bootlogd** *(optional)*  - Record Bootlog of Debian GNU/Linux.
+ - **mutt** *(optional)*  - Nice text-based email client. [Learn more](https://wiki.debian.org/Mutt)
+ - **bootlogd** *(optional)*  - Record boot messages. [Learn more](https://wiki.debian.org/bootlogd)
 
 ## Installation
 1. Download the script.
@@ -26,6 +26,7 @@ Two download options are available:
  - You can customize these defined values for yourself.
 4. *(Optional)* Install bootlogd and mutt(text-based email client).
  - `sudo apt-get install bootlogd mutt`
+ - `sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd`
  - `sudo echo "USEBOOTLOGD=yes" >>/etc/default/bootmail`
 
 ## Usage
