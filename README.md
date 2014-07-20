@@ -1,16 +1,40 @@
-bootmail
-========
-### Requirements
-* **mailx**
-* **mutt** *(optional)*  - Nice text-based email client. [Learn more](en.wikipedia.org/wiki/Mutt_(email_client))
-* **bootlogd** *(optional)*
+# [bootmail](https://github.com/kdzlvaids/bootmail)
 
-### Usage
-**Recommended way:**
+## Table of contents
+ - [Requirements](#requirements)
+ - [Installation](#installation)
+ - [Usage](#usage)
+ - [Examples](#examples)
+ - [License](#license)
+
+## Requirements
+ - **mailx**
+ - **mutt** *(optional)*  - Nice text-based email client. [Learn more](en.wikipedia.org/wiki/Mutt_(email_client))
+ - **bootlogd** *(optional)*
+
+## Installation
+1. Download the script.
+Two download options are available:
+ - [Download the script](https://github.com/kdzlvaids/bootmail/archive/master.zip).
+ - Clone the repo: `git clone https://github.com/kdzlvaids/bootmail.git`.
+2. Install the script.
+ - `chmod 755 bin/bootmail` - Script as executable.
+ - `sudo mv bin/bootmail /etc/init.d/`
+ - `sudo update-rc.d bootmail defaults` - Install script.
+3. *(Optional)* Make a default file to `/etc/default/bootmail`.
+ - See [Example: /etc/default/bootmail](#/etc/default/bootmail).
+ - You can customize these defined values for yourself.
+4. *(Optional)* Install bootlogd and mutt(text-based email client).
+ - `sudo apt-get install bootlogd mutt`
+ - `sudo echo "USEBOOTLOGD=yes" >>/etc/default/bootmail`
+
+## Usage
+Do not run manually. bootmail will send an email automatically when Debian boot up, halt, and reboot.
+### Run as InitScript
 ```bash
 service bootmail {start|stop}
 ```
-Or you can execute directly:
+### Execute directly
 ```bash
 bootmail {start|stop} [email address]
 
@@ -23,18 +47,31 @@ Options:
 -n, --dry-run  perform a trial run with no changes made.
 ```
 
-### Installation
-1. [Download](https://github.com/kdzlvaids/bootmail/archive/master.zip).
-    ```
-    wget --no-check-certificate https://github.com/kdzlvaids/bootmail/archive/master.zip
-    ```
-2. Unzip
-`unzip master.zip`
-3. Move to `/etc/init.d/`
-4. `update-rc.d bootmail defaults`
-
+## Examples
+### /etc/default/bootmail
 ```bash
+MAILTO="root"                       # Receive mail address. Default is: 'root' in your local machine.
+SENDER="$(id -n -u)@$(hostname -f)" # Sender mail address.
+LOGDIR="/var/log"                   # Log directory.
+LOGFILE="$LOGDIR/bootmail.log"      # Log file location.
+USEBOOTLOG="no"                     # Bootlogd attachment in Bootup mail. You must install bootlogd using 'apt-get install bootlogd'.
+BOOTLOGFILE="/var/log/boot"         # Bootlog attachment location.
+```
 
-mv bootmail /etc/init.d/
-update-rc.d bootmail defaults
+## License
+```
+    Copyright (C) 2014  Jongmin Kim / kdzlvaids@gmail.com
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
