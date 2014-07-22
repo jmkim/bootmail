@@ -36,7 +36,7 @@ Two download options are available:
 4. *(Optional)* Install `bootlogd` and `mutt`.
  - `sudo apt-get install bootlogd mutt`
  - `sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd`
- - `sudo echo "USEBOOTLOG=yes" >>/etc/default/bootmail`
+ - `sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail`
 
 ## Usage
 
@@ -69,7 +69,7 @@ MAILTO="root"                       # Receive mail address. Default is: 'root' i
 SENDER="$(id -n -u)@$(hostname -f)" # Sender mail address.
 LOGDIR="/var/log"                   # Log directory.
 LOGFILE="$LOGDIR/bootmail.log"      # Log file location.
-USEBOOTLOG="no"                     # Attach a boot record into the boot up mail.
+ENABLE_BOOTLOG="no"                     # Attach a boot record into the boot up mail.
 BOOTLOGFILE="/var/log/boot"         # Bootlog attachment location.
 ```
 
