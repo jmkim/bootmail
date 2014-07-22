@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash is best way to run this script.
+# bash is the best way to run this script.
 
 # bootmail: Email alert when system boot, reboot, and halt for Debian GNU/Linux.
 
@@ -13,16 +13,18 @@
 
 PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 
+# ENABLE_CONFIG="yes" when you wrote and use /etc/default/bootmail.
 ENABLE_CONFIG="yes"
 CONFIGFILE="/etc/default/bootmail"
 
-# You can export these to '/etc/default/bootmail'.
+# You can export these to /etc/default/bootmail.
 MAILTO="root"
 SENDER="$(id -n -u)@$(hostname -f)"
 LOGDIR="/var/log"
 LOGFILE="$LOGDIR/bootmail.log"
-# 'apt-get install bootlogd'
+# ENABLE_BOOTLOG="no" when you use bootlogd. IT WILL USE mutt INSTEAD OF mailx!!
 ENABLE_BOOTLOG="no"
+# In default, /var/log/boot provided by bootlogd.
 BOOTLOGFILE="/var/log/boot"
 
 if [ "$ENABLE_CONFIG" == "yes" ] && test -f "$CONFIGFILE"; then
@@ -154,7 +156,6 @@ case "$1" in
 		OPTYPE="boot"
 		if [ "$ENABLE_BOOTLOG" == "yes" ] && test -f "$BOOTLOGFILE"; then
 			body_boot_a
-			
 		else
 			body_boot
 		fi
