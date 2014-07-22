@@ -13,8 +13,8 @@
 
 PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 
-LOADDEFAULT="yes"
-DEFAULTFILE="/etc/default/bootmail"
+ENABLE_CONFIG="yes"
+CONFIGFILE="/etc/default/bootmail"
 
 # You can export these to '/etc/default/bootmail'.
 MAILTO="root"
@@ -22,11 +22,11 @@ SENDER="$(id -n -u)@$(hostname -f)"
 LOGDIR="/var/log"
 LOGFILE="$LOGDIR/bootmail.log"
 # 'apt-get install bootlogd'
-USEBOOTLOG="no"
+ENABLE_BOOTLOG="no"
 BOOTLOGFILE="/var/log/boot"
 
-if [ "$LOADDEFAULT" == "yes" ] && test -f "$DEFAULTFILE"; then
-	. "$DEFAULTFILE"
+if [ "$ENABLE_CONFIG" == "yes" ] && test -f "$CONFIGFILE"; then
+	. "$CONFIGFILE"
 fi
 
 if [ ! -z "$2" ]; then
@@ -152,7 +152,7 @@ case "$1" in
         	;;
 	start)
 		OPTYPE="boot"
-		if [ "$USEBOOTLOGD" == "yes" ] && test -f "$BOOTLOGFILE"; then
+		if [ "$ENABLE_BOOTLOG" == "yes" ] && test -f "$BOOTLOGFILE"; then
 			body_boot_a
 			
 		else
