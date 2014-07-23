@@ -43,7 +43,7 @@ if [ "$ENABLE_CONFIG" == "yes" ] && test -f "$CONFIGFILE"; then
 	. "$CONFIGFILE"
 fi
 
-if [ $# -ge 2 ]; then
+if [[ $# -ge 2 ]]; then
 	# Get last argument hack from stackoverflow.com/questions/1853946
 	for MAILTO; do :; done
 elif [ -z "$MAILTO" ]; then
