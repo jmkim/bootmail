@@ -65,12 +65,13 @@ Options:
 ### /etc/default/bootmail
 
 ```bash
-MAILTO="root"                       # Receive mail address. Default is: 'root' in your local machine.
-SENDER="$(id -n -u)@$(hostname -f)" # Sender mail address.
-LOGDIR="/var/log"                   # Log directory.
-LOGFILE="$LOGDIR/bootmail.log"      # Log file location.
-ENABLE_BOOTLOG="no"                     # Attach a boot record into the boot up mail.
-BOOTLOGFILE="/var/log/boot"         # Bootlog attachment location.
+MAILTO="root"                         # 'To:' mail address. Default is: 'root' in your local machine.
+MAILFROM="$(id -n -u)@$(hostname -f)" # 'From:' mail address.
+MAILCLIENT="mailx"                    # Mail client. Currenly supports: "mutt", "mail", "mailx"
+LOGDIR="/var/log"                     # Log directory.
+LOGFILE="$LOGDIR/bootmail.log"        # Log file location.
+ENABLE_BOOTLOG="no"                   # Attach a boot record into the boot up mail.
+BOOTLOGFILE="/var/log/boot"           # Bootlog attachment location.
 ```
 
 ## License
