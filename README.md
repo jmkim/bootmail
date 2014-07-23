@@ -12,11 +12,11 @@ This Linux shell script will send you an email alert when system goes boot, rebo
 
 ## Requirements
 
-*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more](https://wiki.debian.org/Mutt)*
+*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more](https://www.debian.org/releases/stable/i386/ch08s05.html.en)*
 
  - **mailx**
- - **mutt** *(optional)*  - Nice text-based email client.
- - **bootlogd** *(optional)*  - Record boot messages.
+ - **[mutt](https://wiki.debian.org/Mutt)** *(optional)*  - Nice text-based email client.
+ - **[bootlogd](https://wiki.debian.org/bootlogd)** *(optional)*  - Record boot messages.
 
 ## Installation
 1. Download the script.
