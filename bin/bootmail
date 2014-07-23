@@ -17,23 +17,37 @@ PATH="/sbin:/bin:/usr/sbin:/usr/bin"
 ENABLE_CONFIG="yes"
 CONFIGFILE="/etc/default/bootmail"
 
-# You can export these to /etc/default/bootmail.
+# You can export these into /etc/default/bootmail (or $CONFIGFILE above).
+
+# If argument was not given (or running as InitScript), $MAILTO will be set as the default receive email add
+# ress.
 MAILTO="root"
-SENDER="$(id -n -u)@$(hostname -f)"
+
+MAILFROM="$(id -n -u)@$(hostname -f)"
+
+# You can send with "mutt" or "mail", "mailx". Recommended way is "mailx". But if you want ENABLE_BOOTLOG, y
+# ou must use 'mutt'.
+MAILCLIENT="mutt"
+
 LOGDIR="/var/log"
 LOGFILE="$LOGDIR/bootmail.log"
-# ENABLE_BOOTLOG="no" when you use bootlogd. IT WILL USE mutt INSTEAD OF mailx!!
+
+# ENABLE_BOOTLOG="no" when you use bootlogd. This option must with MAILCLIENT="mutt" !!
 ENABLE_BOOTLOG="no"
-# In default, /var/log/boot provided by bootlogd.
+
+# /var/log/boot is provided by bootlogd.
 BOOTLOGFILE="/var/log/boot"
 
+# Load /etc/default/bootmail when $ENABLE_CONFIG is "yes".
 if [ "$ENABLE_CONFIG" == "yes" ] && test -f "$CONFIGFILE"; then
 	. "$CONFIGFILE"
 fi
 
-if [ ! -z "$2" ]; then
-	MAILTO="$2"
+if [ $# -ge 2 ]; then
+	# Get last argument hack from stackoverflow.com/questions/1853946
+	for MAILTO; do :; done
 elif [ -z "$MAILTO" ]; then
+	# If $MAILTO not set (even around line:22), default value is "root".
 	MAILTO="root"
 fi
 
@@ -41,6 +55,39 @@ TIME="$(date +'%F %T')"
 
 RUNLEVEL="$(runlevel)"
 RUNLEVEL="${RUNLEVEL:1}"
+
+do_configcheck(){
+	if [ ! "$MAILCLIENT" == "mutt" ] && [ ! "$MAILCLIENT" == "mailx" ] && [ ! "$MAILCLIENT" == "mail" ]; then 
+		echo "\$MAILCLIENT must be set. Current value: $MAILCLIENT" >&2
+		local RESULT=1
+	fi
+	if [ -z "$LOGDIR" ]; then
+		echo "\$LOGDIR must be set. Current value: $LOGDIR" >&2
+		local RESULT=1
+	elif test ! -w "$LOGDIR"; then 
+		echo "Permission denied in directory: $LOGDIR" >&2
+		local RESULT=1
+	fi
+	if [ -z "$LOGFILE" ]; then
+		echo "\$LOGFILE must be set. Current value: $LOGFILE" >&2
+		local RESULT=1
+	elif test ! -w "$LOGFILE"; then 
+		echo "Permission denied in file: $LOGFILE" >&2
+		local RESULT=1
+	fi
+	return $RESULT
+}
+
+do_configcheck
+if [ $? gt 0 ] ; then
+	exit
+fi
+
+do_mail(){
+	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
+	sudo mail -s "$SUBJECT" "$MAILTO"
+	return
+}
 
 do_mailx(){
 	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
@@ -72,18 +119,18 @@ do_log(){
 	fi
 }
 
-body_boot(){
-	local SUBJECT="Broadcast message from $SENDER"
+mail_boot(){
+	local SUBJECT="Broadcast message from $MAILFROM"
 	{	
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system has been completely booted up.\n\n"
-	} | do_mailx
+	} | do_$MAILCLIENT
 	do_log $?
 }
 
-body_boot_a(){
-	local SUBJECT="Broadcast message from $SENDER"
+mail_boot_a(){
+	local SUBJECT="Broadcast message from $MAILFROM"
 	{	
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
@@ -93,28 +140,29 @@ body_boot_a(){
 	do_log $?
 }
 
-body_halt(){
-	local SUBJECT="Broadcast message from $SENDER"
+mail_halt(){
+	local SUBJECT="Broadcast message from $MAILFROM"
 	{
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system halt NOW!\n\n"
-	} | do_mailx
+	} | do_$MAILCLIENT
 	do_log $?
 }
 
-body_reboot(){
-	local SUBJECT="Broadcast message from $SENDER"
+mail_reboot(){
+	local SUBJECT="Broadcast message from $MAILFROM"
 	{
 		printf "Issued Date: $TIME\n"
 		printf "bootmail:\n\n"
 		printf "The system is going down for system reboot NOW!\n\n"
-	} | do_mailx
+	} | do_$MAILCLIENT
 	do_log $?
 }
 
 do_dryrun(){
-	echo "Not yet."
+	echo "Not yet in current version." >&2
+	return 1
 }
 
 do_bootlogd(){
@@ -129,10 +177,11 @@ do_help(){
 	echo "Arguments:"
 	echo "     start     system boot up alert."
 	echo "     stop      system halt/reboot alert."
+	#echo "     bootlogd  print colorful boot record."
 	echo ""
 	echo "Options:"
 	echo " -h, --help    print this help."
-	echo " -n, --dry-run perform a trial run with no changes made."
+	#echo " -n, --dry-run perform a trial run with no changes made."
 	echo ""
 	echo "This script is InitScript. Run directly is not recommended."
 	echo ""
@@ -154,24 +203,33 @@ case "$1" in
         	;;
 	start)
 		OPTYPE="boot"
-		if [ "$ENABLE_BOOTLOG" == "yes" ] && test -f "$BOOTLOGFILE"; then
-			body_boot_a
+		if [ "$ENABLE_BOOTLOG" == "yes" ] && test -f "$BOOTLOGFILE" && [ "$MAILCLIENT" == "mutt" ]; then
+			mail_boot_a
 		else
-			body_boot
+			mail_boot
 		fi
 	;;
 	stop)
+		# $RUNLEVEL in default, 6 is reboot and 0 is halt.
 		if [ $RUNLEVEL -eq 6 ]; then
 			OPTYPE="reboot"
-			body_reboot
+			mail_reboot
+		elif [ $RUNLEVEL -eq 0 ]; then
+			OPTYPE="halt"
+			mail_halt
 		else
 			OPTYPE="halt"
-			body_halt
+			mail_halt
+		fi
+	;;
+	bootlogd)
+		if test -f "$BOOTLOGFILE"; then
+			do_bootlogd
 		fi
 	;;
 	*)
 		if [ ! -z "$1" ]; then
-			echo "Invalid option: $1"
+			echo "Invalid option: $1" >&2
 		fi
 		echo "Usage: $0 {start|stop} [email address]" >&2
 		echo "" >&2
