@@ -79,7 +79,7 @@ do_configcheck(){
 }
 
 do_configcheck
-if [[ $? gt 0 ]] ; then
+if [[ $? -gt 0 ]] ; then
 	exit
 fi
 
