@@ -12,7 +12,7 @@ This Linux shell script will send you an email alert when system goes boot, rebo
 
 ## Requirements
 
-*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more](https://www.debian.org/releases/stable/i386/ch08s05.html.en)*
+*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more](https://www.debian.org/releases/stable/i386/ch08s05.html.en)* *[How to](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
 
  - mailx
  - [mutt](https://wiki.debian.org/Mutt) *(optional)*  - Nice text-based email client.
