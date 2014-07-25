@@ -23,7 +23,7 @@ sudo ./install.sh
 
 ## Requirements
 
-*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more](https://www.debian.org/releases/stable/i386/ch08s05.html.en)* *[How to](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
+*To receive outside of localhost, mail server or SMTP account setup is needed. [Learn more.](https://www.debian.org/releases/stable/i386/ch08s05.html.en)* *[How to?](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
 
  - mailx
  - [mutt](https://wiki.debian.org/Mutt) *(optional)*  - Nice text-based email client.
@@ -31,7 +31,7 @@ sudo ./install.sh
 
 ## Installation
 
-*In easy way, you can use AutoInstaller instead. [Learn more](#quick-start)*
+*In easy way, you can use AutoInstaller instead. [Learn more.](#quick-start)*
 
 1. Download the script.
 Two download options are available:
