@@ -4,11 +4,22 @@ This Linux shell script will send you an email alert when system goes boot, rebo
 
 ## Table of contents
 
+ - [Quick Start](#quick-start)
  - [Requirements](#requirements)
  - [Installation](#installation)
  - [Usage](#usage)
  - [Examples](#examples)
  - [License](#license)
+
+## Quick Start
+
+Download and run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh) *(install.sh)*.
+
+```bash
+wget --no-check-certificate https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
+chmod 755 install.sh
+sudo ./install.sh
+```
 
 ## Requirements
 
@@ -19,6 +30,9 @@ This Linux shell script will send you an email alert when system goes boot, rebo
  - [bootlogd](https://wiki.debian.org/bootlogd) *(optional)*  - Record boot messages.
 
 ## Installation
+
+*In easy way, you can use AutoInstaller instead. [Learn more](#quick-start)*
+
 1. Download the script.
 Two download options are available:
  - [Download the script as zipped archive](https://github.com/kdzlvaids/bootmail/archive/master.zip).
