@@ -104,30 +104,6 @@ install_bootlogd(){
 	return
 }
 
-# WGET Progress Bar Filter By Dennis Williamson.
-# http://stackoverflow.com/questions/4686464/howto-show-wget-progress-bar-only
-progressfilt(){
-    local flag=false c count cr=$'\r' nl=$'\n'
-    while IFS='' read -d '' -rn 1 c
-    do
-        if $flag
-        then
-            printf '%c' "$c"
-        else
-            if [[ $c != $cr && $c != $nl ]]
-            then
-                count=0
-            else
-                ((count++))
-                if ((count > 1))
-                then
-                    flag=true
-                fi
-            fi
-        fi
-    done
-}
-
 do_install
 
 if [ $? -gt 0 ]; then
