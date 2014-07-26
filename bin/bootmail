@@ -59,29 +59,27 @@ RUNLEVEL="${RUNLEVEL:1}"
 do_configcheck(){
 	if [ ! "$MAILCLIENT" == "mutt" ] && [ ! "$MAILCLIENT" == "mailx" ] && [ ! "$MAILCLIENT" == "mail" ]; then 
 		echo "\$MAILCLIENT must be set. Current value: $MAILCLIENT" >&2
-		local RESULT=1
+		local RESULT=4
 	fi
 	if [ -z "$LOGDIR" ]; then
 		echo "\$LOGDIR must be set. Current value: $LOGDIR" >&2
-		local RESULT=1
+		local RESULT=5
 	elif test ! -w "$LOGDIR"; then 
 		echo "Permission denied in directory: $LOGDIR" >&2
-		local RESULT=1
+		local RESULT=6
 	fi
 	if [ -z "$LOGFILE" ]; then
 		echo "\$LOGFILE must be set. Current value: $LOGFILE" >&2
-		local RESULT=1
+		local RESULT=7
 	elif test ! -w "$LOGFILE"; then 
 		echo "Permission denied in file: $LOGFILE" >&2
-		local RESULT=1
+		local RESULT=8
 	fi
-	return $RESULT
+	if [[ $RESULT -gt 0 ]] ; then
+		exit $RESULT
+	fi
+	return 0
 }
-
-do_configcheck
-if [[ $? -gt 0 ]] ; then
-	exit
-fi
 
 do_mail(){
 	echo -n "bootmail: $OPTYPE mail sending to $MAILTO..."
@@ -202,6 +200,7 @@ case "$1" in
         	exit 3
         	;;
 	start)
+		do_configcheck
 		OPTYPE="boot"
 		if [ "$ENABLE_BOOTLOG" == "yes" ] && test -f "$BOOTLOGFILE" && [ "$MAILCLIENT" == "mutt" ]; then
 			mail_boot_a
@@ -210,6 +209,7 @@ case "$1" in
 		fi
 	;;
 	stop)
+		do_configcheck
 		# $RUNLEVEL in default, 6 is reboot and 0 is halt.
 		if [ $RUNLEVEL -eq 6 ]; then
 			OPTYPE="reboot"
