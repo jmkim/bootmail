@@ -54,10 +54,10 @@ install_bootmail(){
 	# Install bootmail script.
 	# bootmail will 'start' at runlevel 2, and will 'stop' at runlevel 016.
 	update-rc.d bootmail remove &>/dev/null
-	ln -s /etc/init.d/bootmail /etc/init.d/rc2.d/S99bootmail
-	ln -s /etc/init.d/bootmail /etc/init.d/rc0.d/K99bootmail
-	ln -s /etc/init.d/bootmail /etc/init.d/rc1.d/K99bootmail
-	ln -s /etc/init.d/bootmail /etc/init.d/rc6.d/K99bootmail
+	ln -s /etc/init.d/bootmail /etc/rc2.d/S99bootmail
+	ln -s /etc/init.d/bootmail /etc/rc0.d/K99bootmail
+	ln -s /etc/init.d/bootmail /etc/rc1.d/K99bootmail
+	ln -s /etc/init.d/bootmail /etc/rc6.d/K99bootmail
 	if [ $? -gt 0 ]; then
 		echo "FAILED"
 		return 1
