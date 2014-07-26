@@ -23,8 +23,10 @@ do_install(){
 			[Yy]*) install_configfile;;
 			*) echo "Skipping...";;
 		esac
+	else
+		return 1
 	fi
-	return
+	return 0
 }
 
 install_bootmail(){
@@ -70,7 +72,7 @@ install_bootmail(){
 	fi
 	# Remove used files.
 	rm -r $DIR $FILE
-	return
+	return 0
 }
 
 install_configfile(){
@@ -115,9 +117,13 @@ install_configfile(){
 	# Prompt to install 'bootlogd'.
 	read -p "Do you want attach boot record into mail? (y/N): " PROMPT4
 	case "$PROMPT4" in
-		[Yy]*) install_bootlogd;;
+		[Yy]*)	install_bootlogd
+			if [ $? -gt 0 ]; then
+				return 1
+			fi
+		;;
 	esac
-	return
+	return 0
 }
 
 install_bootlogd(){
@@ -151,4 +157,4 @@ else
 	echo "Installation completed."
 fi
 
-exit
+exit 0
