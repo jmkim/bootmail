@@ -2,6 +2,7 @@
 # bash is the best way to run this script.
 
 CONFIGDIR="/etc/default"
+
 CONFIGFILE="$CONFIGDIR/bootmail"
 
 echo "bootmail AutoInstaller"
