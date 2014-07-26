@@ -4,6 +4,9 @@
 CONFIGDIR="/etc/default"
 CONFIGFILE="$CONFIGDIR/bootmail"
 
+echo "bootmail AutoInstaller"
+echo "-----"
+
 # We needs superuser privilege.
 if test ! -w "/etc/init.d/" || test ! -w "$CONFIGDIR"; then
 	echo "E: Unable to run script, are you root? (Try 'sudo $0')" >&2
@@ -13,7 +16,6 @@ fi
 do_install(){
 	install_bootmail
 	if [ $? -eq 0 ] && test -e "$CONFIGFILE"; then
-		echo "-----"
 		# Oops, this line will be run when $CONFIGFILE is already exists.
 		read -p "'$CONFIGFILE' file already exists. Overwrite? (y/N): " PROMPT
 		case "$PROMPT" in
@@ -122,16 +124,18 @@ install_configfile(){
 }
 
 install_bootlogd(){
-	echo "-----"
 	# Install 'bootlogd' (for Debian GNU/Linux).
+	echo "Installing bootlogd..."
 	apt-get install bootlogd
-	echo "-----"
 	# Enable 'bootlogd'.
 	if [ $? -eq 0 ]; then
 		printf "\n BOOTLOGD_ENABLE=yes\n" >>/etc/default/bootlogd
 		printf "ENABLE_BOOTLOG=\"yes\"\n" >>"$CONFIGFILE"
+		echo "bootlogd was installed."
+		echo "Try 'bootmail bootlogd' after next system boot."
 	else
-		printf "E: $0: Install 'bootlogd' seems failed. Error code is: $?" >&2
+		echo "E: $0: Install 'bootlogd' seems failed. Error code is: $?" >&2
+		return 1
 	fi
 	return
 }
@@ -141,10 +145,12 @@ do_install
 # Is there any error?
 if [ $? -gt 0 ]; then
 	# Oops, there are some errors.
+	echo "-----"
 	echo "Some of the installation were unsuccessful."
 	exit 1
 else
 	# Nope!
+	echo "-----"
 	echo "Installation completed."
 fi
 
