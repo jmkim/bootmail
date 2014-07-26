@@ -46,16 +46,24 @@ install_bootmail(){
 	else
 		echo "OK"
 	fi
+	echo -n "Installing bootmail script..."
 	# Make bootmail script executable.
 	chmod 755 $DIR/bootmail*/bin/bootmail
 	# Move to /etc/init.d/
 	mv -f $DIR/bootmail*/bin/bootmail /etc/init.d/
 	# Install bootmail script.
 	# bootmail will 'start' at runlevel 2, and will 'stop' at runlevel 016.
+	update-rc.d bootmail remove 2> /dev/null
 	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc2.d/S99bootmail
 	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc0.d/K99bootmail
 	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc1.d/K99bootmail
 	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc6.d/K99bootmail
+	if [ $? -gt 0 ]; then
+		echo "FAILED"
+		return 1
+	else
+		echo "OK"
+	fi
 	# Remove used files.
 	rm -r $DIR $FILE
 	return
