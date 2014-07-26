@@ -77,11 +77,7 @@ install_configfile(){
 	# OVERWRITE (with your agreements).
 	rm "$CONFIGFILE"
 	echo "-----"
-	echo "You are about to be asked to enter information that will be used into your installation"
-	echo "request."
-	echo "What you are about to enter is writing the '/etc/default/bootmail'."
-	echo "There are quite a few fields but you can leave some blank for some fields there will be"
-	echo "a default value."
+	echo "You are about to be asked to enter information that will be used into your installation request. What you are about to enter is writing the '/etc/default/bootmail'. There are quite a few fields but you can leave some blank for some fields there will be a default value."
 	echo "-----"
 	
 	# Set "TO:" Email address. Default value is: 'root'.
