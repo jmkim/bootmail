@@ -17,10 +17,11 @@ do_install(){
 	install_bootmail
 	if [ $? -eq 0 ] && test -e "$CONFIGFILE"; then
 		# Oops, this line will be run when $CONFIGFILE is already exists.
+		echo "-----"
 		read -p "'$CONFIGFILE' file already exists. Overwrite? (y/N): " PROMPT
 		case "$PROMPT" in
 			[Yy]*) install_configfile;;
-			*) echo -n "Skipping...";;
+			*) echo "Skipping...";;
 		esac
 	fi
 	return
@@ -145,12 +146,10 @@ do_install
 # Is there any error?
 if [ $? -gt 0 ]; then
 	# Oops, there are some errors.
-	echo "-----"
 	echo "Some of the installation were unsuccessful."
 	exit 1
 else
 	# Nope!
-	echo "-----"
 	echo "Installation completed."
 fi
 
