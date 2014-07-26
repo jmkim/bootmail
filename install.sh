@@ -51,7 +51,11 @@ install_bootmail(){
 	# Move to /etc/init.d/
 	mv -f $DIR/bootmail*/bin/bootmail /etc/init.d/
 	# Install bootmail script.
-	update-rc.d bootmail defaults
+	# bootmail will 'start' at runlevel 2, and will 'stop' at runlevel 016.
+	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc2.d/S99bootmail
+	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc0.d/K99bootmail
+	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc1.d/K99bootmail
+	ln -s /etc/init.d/init.d/bootmail /etc/init.d/rc6.d/K99bootmail
 	# Remove used files.
 	rm -r $DIR $FILE
 	return
