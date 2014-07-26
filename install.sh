@@ -18,7 +18,7 @@ do_install(){
 		read -p "'$CONFIGFILE' file already exists. Overwrite? (y/N): " PROMPT
 		case "$PROMPT" in
 			[Yy]*) install_configfile;;
-			*) echo "Skipping...";;
+			*) echo -n "Skipping...";;
 		esac
 	fi
 }
