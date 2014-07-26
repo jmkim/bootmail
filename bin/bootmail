@@ -172,12 +172,12 @@ do_bootlogd(){
 
 do_help(){
 	echo "bootmail, Send email for alert system maintenance."
-	echo "Usage: $0 {start|stop} [email address]"
+	echo "Usage: $0 [-h] {start|stop} [email address]"
 	echo ""
 	echo "Arguments:"
 	echo "     start     system boot up alert."
 	echo "     stop      system halt/reboot alert."
-	#echo "     bootlogd  print colorful boot record."
+	if [ "$ENABLE_BOOTLOG" == "yes" ]; then echo "     bootlogd  print colorful boot record."; fi
 	echo ""
 	echo "Options:"
 	echo " -h, --help    print this help."
