@@ -146,10 +146,12 @@ do_install
 # Is there any error?
 if [ $? -gt 0 ]; then
 	# Oops, there are some errors.
+	echo "-----"
 	echo "Some of the installation were unsuccessful."
 	exit 1
 else
 	# Nope!
+	echo "-----"
 	echo "Installation completed."
 fi
 
