@@ -30,7 +30,7 @@ sudo ./install.sh
 
 ## Installation
 
-*In easy way, you can use AutoInstaller instead. [Learn more.](#quick-start)*
+*In easy way, you can use [AutoInstaller](#quick-start) instead.*
 
 1. Download the script.
 Two download options are available:
