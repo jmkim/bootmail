@@ -64,7 +64,7 @@ service bootmail {start|stop}
 
 *Do not run manually. bootmail will send an email automatically when system boot, reboot, and halt.*
 ```bash
-bootmail {start|stop} [email address]
+bootmail [-h] {start|stop} [email address]
 
 Arguments:
     start      system boot up alert.
