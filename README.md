@@ -41,7 +41,7 @@ Two download options are available:
 2. Install the script.
  - `chmod 755 bin/bootmail` - *Make script executable.*
  - `sudo mv bin/bootmail /etc/init.d/`
- - `sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .` - *'start' at runlevel 2, 'stop' at runlevel 016.*
+ - `sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .` - *`start` at runlevel 2, `stop` at runlevel 016.*
 
 3. *(Optional)* Make `/etc/default/bootmail`.
  - See *[Example: /etc/default/bootmail](#etcdefaultbootmail)*.
