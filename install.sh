@@ -16,14 +16,18 @@ fi
 
 do_install(){
 	install_bootmail
-	if [ $? -eq 0 ] && test -e "$CONFIGFILE"; then
-		# Oops, this line will be run when $CONFIGFILE is already exists.
-		echo "-----"
-		read -p "'$CONFIGFILE' file already exists. Overwrite? (y/N): " PROMPT
-		case "$PROMPT" in
-			[Yy]*) install_configfile;;
-			*) echo "Skipping...";;
-		esac
+	if [ $? -eq 0 ]; then
+		if  test -e "$CONFIGFILE"; then
+			# Oops, this line will be run when $CONFIGFILE is already exists.
+			echo "-----"
+			read -p "'$CONFIGFILE' file already exists. Overwrite? (y/N): " PROMPT
+			case "$PROMPT" in
+				[Yy]*) install_configfile;;
+				*) echo "Skipping...";;
+			esac
+		else
+			install_configfile
+		fi
 	else
 		return 1
 	fi
@@ -40,6 +44,7 @@ install_bootmail(){
 	wget -q --no-check-certificate "https://github.com/kdzlvaids/bootmail/archive/master.zip" -O "$FILE"
 	if [ $? -gt 0 ]; then
 		echo "FAILED"
+		rm -r $DIR $FILE
 		return 1
 	else
 		echo "OK"
@@ -49,6 +54,7 @@ install_bootmail(){
 	unzip -q $FILE -d $DIR
 	if [ $? -gt 0 ]; then
 		echo "FAILED"
+		rm -r $DIR $FILE
 		return 1
 	else
 		echo "OK"
@@ -81,7 +87,7 @@ install_configfile(){
 	
 	# Set "TO:" Email address. Default value is: 'root'.
 	read -p "Receive email address (eg, admin@example.com) [root]: " PROMPT1
-	if [ ! -z"$PROMPT1" ]; then
+	if [ ! -z "$PROMPT1" ]; then
 		printf "MAILTO=\"$PROMPT1\"\n" >>"$CONFIGFILE"
 	else
 		printf "MAILTO=\"root\"\n" >>"$CONFIGFILE"
@@ -129,10 +135,12 @@ install_bootlogd(){
 	apt-get install bootlogd
 	# Enable 'bootlogd'.
 	if [ $? -eq 0 ]; then
-		printf "\n BOOTLOGD_ENABLE=yes\n" >>/etc/default/bootlogd
+		printf "\nBOOTLOGD_ENABLE=yes\n" >>/etc/default/bootlogd
 		printf "ENABLE_BOOTLOG=\"yes\"\n" >>"$CONFIGFILE"
 		echo "bootlogd was installed."
-		echo "Try 'bootmail bootlogd' after next system boot."
+		echo ""
+		echo "Try 'service bootmail bootlogd'."
+		echo ""
 	else
 		echo "E: $0: Install 'bootlogd' seems failed. Error code is: $?" >&2
 		return 1
