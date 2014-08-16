@@ -71,9 +71,12 @@ do_configcheck(){
 	if [ -z "$LOGFILE" ]; then
 		echo "\$LOGFILE must be set. Current value: $LOGFILE" >&2
 		local RESULT=7
-	elif test ! -w "$LOGFILE"; then 
-		echo "Permission denied in file: $LOGFILE" >&2
-		local RESULT=8
+	else
+		touch "$LOGFILE"
+		if test ! -w "$LOGFILE"; then
+			echo "Permission denied in file: $LOGFILE" >&2
+			local RESULT=8
+		fi
 	fi
 	if [[ $RESULT -gt 0 ]] ; then
 		exit $RESULT
