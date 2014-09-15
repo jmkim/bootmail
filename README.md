@@ -12,7 +12,7 @@ A Linux Bash script made for sending a mail about system boot.
 
 ## Requirements
 
-*To send outside of localhost, mail server or SMTP account setup is needed. [Learn more.](https://www.debian.org/releases/stable/i386/ch08s05.html.en) [How to?](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
+*To send out of localhost, mail server or SMTP account setup is needed. [How to?](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
 
  - [mailx](http://heirloom.sourceforge.net/) or [mutt](http://www.mutt.org/)
  - [bootlogd](https://wiki.debian.org/bootlogd) *(optional)*  - Record boot messages.
@@ -27,7 +27,7 @@ chmod 755 install.sh
 sudo ./install.sh
 ```
 
-### More hard way
+### ...more hard way
 
 1. Download the script.
 Two download options are available:
