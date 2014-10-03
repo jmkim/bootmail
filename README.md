@@ -19,7 +19,7 @@ A Linux Bash script made for sending a mail about system boot.
 
 ## Installation
 
-Download and run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh) *(install.sh)*.
+Run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh) *(install.sh)*.
 
 ```bash
 wget --no-check-certificate https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
