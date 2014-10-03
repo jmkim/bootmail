@@ -25,8 +25,8 @@ MAILTO="root"
 
 MAILFROM="$(id -n -u)@$(hostname -f)"
 
-# You can send with "mutt" or "mail", "mailx". Recommended way is "mailx". But if you want ENABLE_BOOTLOG, y
-# ou must use 'mutt'.
+# You can send with "mutt" or "mail", "mailx". Recommended way is "mailx". But if you want ENABLE_BOOTLOG,
+# you must use 'mutt'.
 MAILCLIENT="mutt"
 
 LOGDIR="/var/log"
