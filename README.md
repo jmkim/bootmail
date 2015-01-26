@@ -1,8 +1,8 @@
-# bootmail
+## bootmail
 
 A Linux Bash script made for sending a mail about system boot.
 
-## Table of contents
+### Table of contents
 
  - [Requirements](#requirements)
  - [Installation](#installation)
@@ -10,16 +10,16 @@ A Linux Bash script made for sending a mail about system boot.
  - [Examples](#examples)
  - [License](#license)
 
-## Requirements
+### Requirements
 
 *To send out of localhost, mail server or SMTP account setup is needed. [How to?](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
 
  - [mailx](http://heirloom.sourceforge.net/) or [mutt](http://www.mutt.org/)
  - [bootlogd](https://wiki.debian.org/bootlogd) *(optional)*  - Record boot messages.
 
-## Installation
+### Installation
 
-### Run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh)
+#### Run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh)
 
 ```bash
 wget --no-check-certificate https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
@@ -27,7 +27,7 @@ chmod 755 install.sh
 sudo ./install.sh
 ```
 
-### or more hard way
+#### or more hard way
 
 1. Download the script.
 Two download options are available:
@@ -49,14 +49,14 @@ Two download options are available:
  - `sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd`
  - `sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail`
 
-## Usage
+### Usage
 
-### Run as InitScript
+#### Run as InitScript
 
 ```bash
 service bootmail {start|stop}
 ```
-### Run manually
+#### Run manually
 
 *bootmail will send an email automatically, so do not run manually.*
 ```bash
@@ -70,9 +70,9 @@ Options:
 -h, --help     print this help.
 ```
 
-## Examples
+### Examples
 
-### /etc/default/bootmail
+#### /etc/default/bootmail
 
 ```bash
 MAILTO="root"                         # "To:" mail address (Default is 'root' in your local machine)
@@ -84,7 +84,7 @@ ENABLE_BOOTLOG="no"                   # Attach a boot record into the boot up ma
 BOOTLOGFILE="/var/log/boot"           # Bootlog attachment location
 ```
 
-## License
+### License
 
 ```
     Copyright (C) 2014  Jongmin Kim / kdzlvaids@gmail.com
