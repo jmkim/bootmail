@@ -7,60 +7,65 @@ bootmail: A Linux Bash script made for sending a mail about system boot.
  - [Requirements](#requirements)
  - [Installation](#installation)
  - [Usage](#usage)
- - [Examples](#examples)
  - [License](#license)
 
 ## Requirements
 
-*To send out of localhost, mail server or SMTP account setup is needed. [How to?](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487)*
-
  - [mailx](http://heirloom.sourceforge.net/) or [mutt](http://www.mutt.org/)
  - [bootlogd](https://wiki.debian.org/bootlogd) *(optional)*  - Record boot messages.
+ - [SMTP Server](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487) *(optional)* - Required when you sending out from `localhost`
 
 ## Installation
 
 #### Run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh)
 
 ```bash
-wget --no-check-certificate https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
+wget https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
 chmod 755 install.sh
 sudo ./install.sh
 ```
 
 #### or more hard way
 
-1. Download the script.
-Two download options are available:
- - Clone the repo: `git clone https://github.com/kdzlvaids/bootmail.git`.
- - [Download the script as zipped archive](https://github.com/kdzlvaids/bootmail/archive/master.zip).
+```bash
+# Download script
+git clone git@github.com:kdzlvaids/bootmail.git
+# or
+git clone https://github.com/kdzlvaids/bootmail.git
 
-2. Install the script.
- - `chmod 755 bin/bootmail`
- - `sudo mv bin/bootmail /etc/init.d/`
- - `sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .`
+# Install script
+chmod 755 bootmail/bin/bootmail
+sudo cp bootmail/bin/bootmail /etc/init.d/
+sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .
 
-3. *(Optional)* Make `/etc/default/bootmail`.
- - See *[Example: /etc/default/bootmail](#etcdefaultbootmail)*.
- - You can customize these defined values for yourself.
+# optional: Install mutt mail client
+sudo apt-get install mutt
 
-4. *(Optional)* Install [mutt](http://www.mutt.org/) and [bootlogd](https://wiki.debian.org/bootlogd).
- - `sudo apt-get install mutt`
- - `sudo apt-get install bootlogd`
- - `sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd`
- - `sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail`
+# optional: Install bootlogd (Debian boot logger)
+sudo apt-get install bootlogd
+sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd
+sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail
+```
+```bash
+# optional: Make /etc/default/bootmail
+MAILTO="root"                         # "To:" mail address (Default is 'root' in your local machine)
+MAILFROM="$(id -n -u)@$(hostname -f)" # "From:" mail address
+MAILCLIENT="mailx"                    # Mail client: mutt/mail/mailx
+LOGDIR="/var/log"                     # Log directory
+LOGFILE="$LOGDIR/bootmail.log"        # Log file location
+ENABLE_BOOTLOG="no"                   # Attach a boot record into the boot up mail
+BOOTLOGFILE="/var/log/boot"           # Bootlog attachment location
+```
 
 ## Usage
 
-#### Run as InitScript
-
 ```bash
-service bootmail {start|stop}
-```
-#### Run manually
+# Method 1: Run as InitScript
+sudo service bootmail {start|stop}
 
-*bootmail will send an email automatically, so do not run manually.*
-```bash
-bootmail [-h] {start|stop} [email address]
+# Method 2: Run manually
+# bootmail will send an email automatically, so do not run manually.
+/etc/init.d/bootmail [-h] {start|stop} [email address]
 
 Arguments:
     start      system boot up alert.
@@ -70,19 +75,6 @@ Options:
 -h, --help     print this help.
 ```
 
-## Examples
-
-#### /etc/default/bootmail
-
-```bash
-MAILTO="root"                         # "To:" mail address (Default is 'root' in your local machine)
-MAILFROM="$(id -n -u)@$(hostname -f)" # "From:" mail address
-MAILCLIENT="mailx"                    # Mail client: mutt/mail/mailx
-LOGDIR="/var/log"                     # Log directory
-LOGFILE="$LOGDIR/bootmail.log"        # Log file location
-ENABLE_BOOTLOG="no"                   # Attach a boot record into the boot up mail
-BOOTLOGFILE="/var/log/boot"           # Bootlog attachment location
-```
 
 ## License
 
