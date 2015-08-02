@@ -1,50 +1,48 @@
 ```
 bootmail: A Linux Bash script made for sending a mail about system boot.
 ```
-
-## Table of contents
-
- - [Requirements](#requirements)
- - [Installation](#installation)
- - [Usage](#usage)
- - [License](#license)
-
 ## Requirements
 
- - [mailx](http://heirloom.sourceforge.net/) or [mutt](http://www.mutt.org/)
- - [bootlogd](https://wiki.debian.org/bootlogd) *(optional)*  - Record boot messages.
- - [SMTP Server](http://www.fclose.com/1411/sending-email-from-mailx-command-in-linux-using-gmails-smtp/#comment-487) *(optional)* - Required when you sending out from `localhost`
+```
+Type           Package name    Description
+===========    ============    ===========
+mail client    mail
+               mailx
+               mutt
+smtp server    sendmail        *optional  (required when you sending out from localhost)
+boot logger    bootlogd        *optional  (only works with mutt)
+```
 
 ## Installation
 
 #### Run [AutoInstaller](https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh)
 
 ```bash
-wget https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
-chmod 755 install.sh
-sudo ./install.sh
+$ wget https://raw.githubusercontent.com/kdzlvaids/bootmail/master/install.sh
+$ chmod 755 install.sh
+$ sudo ./install.sh
 ```
 
 #### or more hard way
 
 ```bash
 # Download script
-git clone git@github.com:kdzlvaids/bootmail.git
+$ git clone git@github.com:kdzlvaids/bootmail.git
 # or
-git clone https://github.com/kdzlvaids/bootmail.git
+$ git clone https://github.com/kdzlvaids/bootmail.git
 
 # Install script
-chmod 755 bootmail/bin/bootmail
-sudo cp bootmail/bin/bootmail /etc/init.d/
-sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .
+$ chmod 755 bootmail/bin/bootmail
+$ sudo cp bootmail/bin/bootmail /etc/init.d/
+$ sudo update-rc.d bootmail start 99 2 . stop 99 0 1 6 .
 
 # optional: Install mutt mail client
-sudo apt-get install mutt
+$ sudo apt-get install mutt
 
 # optional: Install bootlogd (Debian boot logger)
-sudo apt-get install bootlogd
-sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd
-sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail
+$ sudo apt-get install bootlogd
+$ sudo echo "BOOTLOGD_ENABLE=yes" >>/etc/default/bootlogd
+$ sudo echo "ENABLE_BOOTLOG=yes" >>/etc/default/bootmail
 ```
 ```bash
 # optional: Make /etc/default/bootmail
@@ -61,11 +59,11 @@ BOOTLOGFILE="/var/log/boot"           # Bootlog attachment location
 
 ```bash
 # Method 1: Run as InitScript
-sudo service bootmail {start|stop}
+$ sudo service bootmail {start|stop}
 
 # Method 2: Run manually
 # bootmail will send an email automatically, so do not run manually.
-/etc/init.d/bootmail [-h] {start|stop} [email address]
+bootmail [-h] {start|stop} [email address]
 
 Arguments:
     start      system boot up alert.
